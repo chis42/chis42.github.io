@@ -160,6 +160,103 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="categories-10-24" class="article article-type-categories  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/10/25/10-24/">10-24</a>
+    </h1>
+  
+
+        
+        <a href="/2021/10/25/10-24/" class="archive-article-date">
+  	<time datetime="2021-10-25T04:15:29.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-10-25</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="remake-指针"><a href="#remake-指针" class="headerlink" title="/remake 指针"></a>/remake 指针</h1><p>1.强制转换取地址的int变量</p>
+<p>指针不能访问静态常量区</p>
+<p>字符指针要注意指向的是字符还是字符串，用遍历字符串的方式来去访问字符会导致内存访问越界</p>
+<p>sizeof（*p）：指针对应类型的长度</p>
+<h1 id="remake-结构体"><a href="#remake-结构体" class="headerlink" title="/remake 结构体"></a>/remake 结构体</h1><p>结构体格式</p>
+<p>typedef struct student</p>
+<p>{</p>
+<p>   变量；</p>
+<p>变量</p>
+<p>}student ,*pstudent;(这里是变量声明)</p>
+<p>结构体外指针指向格式</p>
+<p>1.student *ps1=&s1;</p>
+<p> 疑问:strcpy</p>
+<p>结构体用指针变量来当结构体变量</p>
+<p>1.只试了char类型指针，int类型指针老是报错，char类型记得输出要%s</p>
+<p>疑问1：为什么我int类型指针在结构体里面老是报错</p>
+<p>疑问2：如何修改结构体内容</p>
+<p>结构体中有指针必须要指定内存</p>
+<p>疑问：s2.birth = (date*)malloc(sizeof(date));</p>
+<p>为什么初始化指针内存需要date<em>（如果char</em>  *  是这样的话，那是不是int * 也能这样成功初始化分配内存）</p>
+<p>if (s2-&gt;name = NULL)</p>
+<p>这个应该是避免指针为空变成野指针？</p>
+<p>如果代码结构体中有n个指针，要进行n次内存分配和初始化</p>
+<p>结构体 多项指向</p>
+<p>s2-&gt;birth-&gt;year = 1997</p>
+<p>这种是得要s2也是个指针，指向结构体student</p>
+<p>结构体 链表与树</p>
+<p>初步理解：链表：它应该是结构体中有一个指向小结构体的指针（但是在结构体中只有一个）</p>
+<p>树：它是结构体中有两个指向相同类型小结构体的指针（因此叫树）</p>
+<p>16：42 疑问数组需要分配内存空间吗？</p>
+<p>不是这个问题，对于结构体数组名来说是不能直接进行赋值修改的</p>
+<p>因此要使用strcpy_s来对这里面数组进行赋值</p>
+<h1 id="汇编之函数调用"><a href="#汇编之函数调用" class="headerlink" title="汇编之函数调用"></a>汇编之函数调用</h1><p>断点中断指令0ccccch 会来填充临时变量</p>
+<p>先push压存入变量占据内存空间入栈，接着函数调用形成eip（函数返回地址）然后esp本来是存放栈顶地址的，EBP存储着当前<a target="_blank" rel="noopener" href="https://www.k2zone.cn/?tag=%E5%87%BD%E6%95%B0%E6%A0%88">函数栈</a>底的地址，ebp被压入栈，ebp被esp赋值，esp开始向上弹空间（一开始esp也会向上移动字节长的空间），这段空间是函数里面是函数局部变量空间， 然后系统会放入三个寄存器ebx，esi，edi，（系统并无备份，准备随时拿来用的），然后将局部变量空间赋值成ccc（断点指令）想加完后，执行寄存器出栈，出完后，esp到栈顶，然后esp被和ebp地址相同，esp就到了ebp的位置，然ebp被pop，老ebp就走到ebp地址去，esp就走到eip出栈，</p>
+<p>call完后main函数里面调用者会清理</p>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kity@2.0.4/dist/kity.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text/javascript" src="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.6.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.6.0/dist/mindmap.min.css">
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/10/25/10-24/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="categories-10-9" class="article article-type-categories  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -727,70 +824,6 @@
 
 
   
-    <article id="post-photo" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/10/02/photo/">photo</a>
-    </h1>
-  
-
-        
-        <a href="/2021/10/02/photo/" class="archive-article-date">
-  	<time datetime="2021-10-02T08:21:05.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-10-02</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><img src="/2021/10/02/photo/example.png"> </p>
-<p><img src="/2021/10/02/photo/myblog\source_posts\photo\example.png" alt="photo"></p>
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kity@2.0.4/dist/kity.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text/javascript" src="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.6.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.6.0/dist/mindmap.min.css">
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2021/10/02/photo/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
     <article id="categories-10-2" class="article article-type-categories  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -955,10 +988,6 @@
 
 
   
-  
-    <nav id="page-nav">
-      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next &amp;raquo;</a>
-    </nav>
   
 
 
