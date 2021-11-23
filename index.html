@@ -160,12 +160,139 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-CrakeMe" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="CrakeMe经典160题（11-21-11-23）"><a href="#CrakeMe经典160题（11-21-11-23）" class="headerlink" title="CrakeMe经典160题（11.21-11.23）"></a>CrakeMe经典160题（11.21-11.23）</h1><h1 id="Acid-burn-exe"><a href="#Acid-burn-exe" class="headerlink" title="Acid burn.exe"></a>Acid burn.exe</h1><p>收集信息：</p>
+<p>一打开会有一个弹窗</p>
+<p><img src="/2021/11/23/CrakeMe/1.png" alt="CrakeMe"></p>
+<p>进入到程序主页面试试各个按钮</p>
+<p>试了下serial/Name按钮 发现</p>
+<p>正常注册码错误信息sorry , The serial is incorect !</p>
+<p>如果不输入账号的话会报错</p>
+<p><img src="/2021/11/23/CrakeMe/2.png" alt="CrakeMe"></p>
+<p>Google一下发现  (<a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/15798281/troubleshooting-access-violation-at-address-read-of-address-00000000">https://stackoverflow.com/questions/15798281/troubleshooting-access-violation-at-address-read-of-address-00000000</a>)</p>
+<p> 这样说明可能是根据账号“name”来进行算法运算来得到结果</p>
+<p>Serial按钮单报错Try Again!!</p>
+<p>调试过程：</p>
+<p>查找可疑字符串</p>
+<p>先在%d %s 还有错误信息这些地方段首下断</p>
+<p>一开始想要模拟调用窗口的函数直接进行放回，后发现这样不行，在这函数里面已经扩展的新的（更大）的地址了</p>
+<p>直接nop爆破后解除窗口</p>
+<p>似乎全局调用弹窗窗口都是这个函数，nop后再按啥也没出</p>
+<p>总结了下</p>
+<p>这个错误应该是这样引起的</p>
+<p>先是push字符串进栈，但是接下来我却没调用（因为我nop掉了），而且在这个函数里面他还根据我的字符串初始化了指针，所以所有窗口都寄了</p>
+<p>因此我选择在段首直接retn，假装无事发生</p>
+<p>先来试试name/serial按钮里面的，定位字符串位置，</p>
+<p>发现上面有个JGE，防止数据溢出和输入的是负数</p>
+<p>定位多个关键字符串段首断点，发现他是先归为失败的结果，再进行比较，于是在栈中变量变化的两个函数内，我反复断点，</p>
+<p>发现第一个call主要任务是给cx赋予10，然后进入第二个call，对每个字符进行判断查看是否违法，第二个call里面的第二个跳转，终于不停调试找到了（泪目）</p>
+<p><img src="/2021/11/23/CrakeMe/3.png" alt="CrakeMe"></p>
+<p>将之前计算的eax的值取出来与10取余，进行运算，也就是按位取出，再进行进制转换</p>
+<p>补充：前面eax那里有个movzx，取出来第一个字母码，所以实际上*的是57（大小端存储方式）</p>
+<p>学会的东西：</p>
+<p>1.一些来自x86的字符串汇编指令stosd，REPNE/REPNZ，MOVZX</p>
+<p>2.一些算法逆向大概框架</p>
+<p>3.还有nop的一些注意事项</p>
+<p>芜湖部分：</p>
+<p>了解算法后好玩的试探</p>
+<p><img src="/2021/11/23/CrakeMe/4.png" alt="CrakeMe"></p>
+<p><img src="/2021/11/23/CrakeMe/5.png" alt="CrakeMe"></p>
+<h1 id="Andrnalin-1"><a href="#Andrnalin-1" class="headerlink" title="Andrnalin.1"></a>Andrnalin.1</h1><p>这题没啥好说的，和上题总体逻辑一样</p>
+<p>无算法，注册码都在汇编里给出来了</p>
+<p><img src="/2021/11/23/CrakeMe/6.png" alt="CrakeMe"></p>
+<h1 id="Afkayas-1-Exe"><a href="#Afkayas-1-Exe" class="headerlink" title="Afkayas.1.Exe"></a>Afkayas.1.Exe</h1><p><img src="/2021/11/23/CrakeMe/7.png" alt="CrakeMe"></p>
+<p><img src="/2021/11/23/CrakeMe/8.png" alt="CrakeMe"></p>
+<p><img src="/2021/11/23/CrakeMe/9.png" alt="CrakeMe"></p>
+<p>好像是要分析他算法 先在成功的je前断点进入这个call</p>
+<p><img src="/2021/11/23/CrakeMe/10.png" alt="CrakeMe"></p>
+<p>发现前面有个cmp的，说明肯定在这个函数前面是算法</p>
+<p>试了下我多次输入1发现结果都是这个，说明他这个算法结果解出来不是动态的</p>
+<p>于是试下账户1 和他计算完的结果</p>
+<p><img src="/2021/11/23/CrakeMe/11.png" alt="CrakeMe"></p>
+<h1 id="AfKayAs-2-Exe"><a href="#AfKayAs-2-Exe" class="headerlink" title="AfKayAs.2.Exe"></a>AfKayAs.2.Exe</h1><p><img src="/2021/11/23/CrakeMe/12.png" alt="CrakeMe"></p>
+<p>比si（和上题一样，看下断点f7跟进看算完的ESI寄存器就行</p>
+<p>解除nop窗口</p>
+<p><img src="/2021/11/23/CrakeMe/13.png" alt="CrakeMe"></p>
+<p>f8跟进发现调用窗口指令</p>
+<p>直接jmp</p>
+<p>发现寄了</p>
+<p>f7跟进去</p>
+<p>上面</p>
+<p>发现没用，搜索文章看了下vb程序结构体</p>
+<p>在数据段找到结构体段开头跟随</p>
+<p>用4C大法，为什么是4C呢，因为从结构体开头地址进来</p>
+<p>第一个块是调用dll之类的程序，块结尾到块开头减去刚好等于4C</p>
+<p>注意事项：更改内存地址数据的时候要结合块来全部进行保存</p>
+<p><img src="/2021/11/23/CrakeMe/14.png" alt="CrakeMe"></p>
+<h1 id="ajj-1"><a href="#ajj-1" class="headerlink" title="ajj.1"></a>ajj.1</h1><p><img src="/2021/11/23/CrakeMe/15.png" alt="CrakeMe"></p>
+<p>也是拼接字符串，这些还不如第一题难找，第一题属实是找半年了</p>
+<p>这四题都是可以再栈中直接找到注册码的，算法也都类似</p>
+<h1 id="总结CrakeMe过程"><a href="#总结CrakeMe过程" class="headerlink" title="总结CrakeMe过程"></a>总结CrakeMe过程</h1><p>1.查看原生信息：例如是什么文件格式，多少位的文件，用什么壳，什么软件……</p>
+<p>2.进软件正常运行，没有注册码他会怎么样，是否有不同的报错，调用哪些api</p>
+<p>调试过程</p>
+<p>看着你输入的字符串，在汇编里面如何跳转加密（过程中下断点）</p>
+<p>根据window api调用来下断点（节约时间）</p>
+<p>unicode字符串语句段首断点</p>
+<p>判断算法在跳转语句的哪一个部分</p>
+<p>3.分析算法</p>
+<p>这部分就得细看汇编语言</p>
+<p>了解字符串在内存中的表现形式</p>
+<p>做完后对自己的建议：</p>
+<p>1.对多个功能共用的窗口一定得警惕（不要无脑nop，有时优雅retn也行）</p>
+<p>2.寻找算法方法：1.找到大概区间-》2.注意汇编中常量的存在-》3.注意运算过程中栈的表现形式（比如里面的字节计算过8364转为16进制找不出来，浪费了许多时间）</p>
+<p>3.总结下来其实还是crakeme经验不足，算法逆向还不能手到擒来</p>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kity@2.0.4/dist/kity.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text/javascript" src="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.6.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.6.0/dist/mindmap.min.css">
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/11/23/CrakeMe/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-10.24-11.17" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="16位系统汇编-10-24-11-17"><a href="#16位系统汇编-10-24-11-17" class="headerlink" title="16位系统汇编(10.24-11.17)"></a>16位系统汇编(10.24-11.17)</h1><h2 id="寄存器"><a href="#寄存器" class="headerlink" title="寄存器"></a>寄存器</h2><h3 id="段寄存器"><a href="#段寄存器" class="headerlink" title="段寄存器"></a>段寄存器</h3><ul>
+        <h1 id="16位系统汇编-10-24-11-21"><a href="#16位系统汇编-10-24-11-21" class="headerlink" title="16位系统汇编(10.24-11.21)"></a>16位系统汇编(10.24-11.21)</h1><h2 id="寄存器"><a href="#寄存器" class="headerlink" title="寄存器"></a>寄存器</h2><h3 id="段寄存器"><a href="#段寄存器" class="headerlink" title="段寄存器"></a>段寄存器</h3><ul>
 <li><p>ds</p>
 <ul>
 <li>用来存放访问数据的段地址</li>
@@ -973,87 +1100,6 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2021/10/05/10-5/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="categories-10-4" class="article article-type-categories  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/10/04/10-4/">10-4</a>
-    </h1>
-  
-
-        
-        <a href="/2021/10/04/10-4/" class="archive-article-date">
-  	<time datetime="2021-10-04T11:33:29.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-10-04</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="周哥之内建型别作业"><a href="#周哥之内建型别作业" class="headerlink" title="周哥之内建型别作业"></a>周哥之内建型别作业</h1><p>1.有int short long double bool  char wchar_t long long   _int64 </p>
-<p>2.以这样的格式”typedef int INT;” </p>
-<p>3.字符编码分为ascii码和unicode ascii只是为了计算机语言 而unicode是为了所有语言可以计算机的方式展现出来 utf-8 utf-16 utf-32 一般是web网站是以utf-8来进行编码</p>
-<p>因为另外两个编码方式会拖延用户访问网站的速度</p>
-<p>4.一个是ascii字符 一个是unicode字符</p>
-<p>5.0代表的是数值0，‘0‘代表的是0的ascii码值</p>
-<p>Null也就是void把空指针</p>
-<p>“0”是字符串0的意思</p>
-<p>5.尾数和阶码同时为0 （思考：那这样说尾数是0指数=-127才是等于0）</p>
-<h1 id="类型长度与取值范围"><a href="#类型长度与取值范围" class="headerlink" title="类型长度与取值范围"></a>类型长度与取值范围</h1><p>思考：X86架构和x架构系统有什么区别</p>
-<p><img src="/2021/10/04/10-4/1.png" alt="10-4"></p>
-<p>也就是说x86是更偏向于对32位的cpu进行操作</p>
-<p>而x64是更偏向于64位的cpu进行操作</p>
-<p><strong>要小心数据溢出</strong> 有可能会造成安全漏洞</p>
-<h1 id="类型长度与取值范围作业"><a href="#类型长度与取值范围作业" class="headerlink" title="类型长度与取值范围作业"></a>类型长度与取值范围作业</h1><ol>
-<li>sizeof运算符，编译阶段</li>
-<li>i=0；i=-1（一开始还以为这个只是单独的i=65535）</li>
-<li>-128</li>
-</ol>
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kity@2.0.4/dist/kity.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text/javascript" src="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.6.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.6.0/dist/mindmap.min.css">
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2021/10/04/10-4/">展开全文 >></a>
         </p>
       
 
