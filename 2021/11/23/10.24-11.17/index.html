@@ -16,7 +16,7 @@
 <meta property="og:description" content="16位系统汇编(10.24-11.21)寄存器段寄存器 ds  用来存放访问数据的段地址   ss  与sp一起来存放栈的地址  ss作为段地址   sp作为偏移地址  注意事项  由于栈空间是由高地址向低地址增长的，栈为空的时候字单元偏移地址得+2       cs  与ip一起来存放要进行指令地址的读取  cs是整一个代码段的起始地址 ip是将要读取的代码的偏移地址  通过改变cs和ip可以让">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2021-11-23T03:17:58.401Z">
-<meta property="article:modified_time" content="2021-11-23T10:35:49.110Z">
+<meta property="article:modified_time" content="2021-11-23T11:01:02.243Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
   
@@ -353,7 +353,34 @@
 <h3 id="这里本来只有128个单位为什么说占256字节"><a href="#这里本来只有128个单位为什么说占256字节" class="headerlink" title="这里本来只有128个单位为什么说占256字节"></a>这里本来只有128个单位为什么说占256字节</h3><ul>
 <li>自答：每个单元占两个字</li>
 </ul>
-<h2 id="未完待续…"><a href="#未完待续…" class="headerlink" title="未完待续…."></a>未完待续….</h2><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kity@2.0.4/dist/kity.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text/javascript" src="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.6.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.6.0/dist/mindmap.min.css">
+<h1 id="冯-诺伊曼体系"><a href="#冯-诺伊曼体系" class="headerlink" title="冯|诺伊曼体系"></a>冯|诺伊曼体系</h1><h1 id="x86汇编学习"><a href="#x86汇编学习" class="headerlink" title="x86汇编学习"></a>x86汇编学习</h1><h1 id="寄存器与汇编"><a href="#寄存器与汇编" class="headerlink" title="寄存器与汇编"></a>寄存器与汇编</h1><p>标志寄存器是用来保存汇编指令运算过程中的结果</p>
+<h1 id="内存寻址"><a href="#内存寻址" class="headerlink" title="内存寻址"></a>内存寻址</h1><p>编译器生成逻辑地址，再由分段机制将逻辑地址转换而来成为线性地址，再进行分页机制得出物理地址</p>
+<p>思考问题:pe文件结构地址 RVA+ 基址=VA </p>
+<p>这个基址是不是指的是物理地址，rva是不是指的是逻辑地址？<br>不对 这个内存寻址不是在CPU里面进行处理的吗？那这些偏移地址又会对这个pe结构有什么交互影响吗？</p>
+<p>x86体系内存寻址模式</p>
+<p>实模式分段模型</p>
+<p>实模式地址总线20位，地址使用虚拟地址，段是以64kb来固定大小</p>
+<p>保护模式地址总线32位</p>
+<h1 id="RISC与CISC"><a href="#RISC与CISC" class="headerlink" title="RISC与CISC"></a>RISC与CISC</h1><p>  RISC</p>
+<p>代表苹果系统 arm</p>
+<p>存储结构更多要求再寄存器中计算不会访问内存</p>
+<p>可以并线操作（意思应该是在多个寄存器中同时进行运算）</p>
+<p>长度一般为4个字节 单周期单条指令</p>
+<h1 id="传送指令"><a href="#传送指令" class="headerlink" title="传送指令"></a>传送指令</h1><p>MOV</p>
+<p>段寄存器不能用mov直接传送</p>
+<p>例：MOV EAX，DWORD PTR SS:[EBP-1C]</p>
+<p>解析  dword是指存放数据的宽度 ss是指哪个段 （疑问到底是哪个段呢），【EBP-1C】是指对基地址的偏移（就是存放在哪里)</p>
+<p>内存段看到代码90就是nop指令 空转 什么都不执行</p>
+<p>疑问：参数入栈的时候是esp先向上加空间再存入还是先存入再加空间</p>
+<p>LEA 和MOV的区别LEA 【】这里面可以放表达式而mov不行</p>
+<h1 id="位运算指令"><a href="#位运算指令" class="headerlink" title="位运算指令"></a>位运算指令</h1><p>test 指令会更改eflags（zf）的标志位，and则不会</p>
+<p>eax存着自定函数的返回值</p>
+<p>shr对于逻辑右移来说统统用0来去填充</p>
+<p>sar对于算数右移来说根据符号位来去填充</p>
+<p>ROL 循环左移两位</p>
+<p>就是 00110011变成110000</p>
+<p>ROR循环右移一样</p>
+<h1 id="未整合完待续……"><a href="#未整合完待续……" class="headerlink" title="未整合完待续…….."></a>未整合完待续……..</h1><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kity@2.0.4/dist/kity.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text/javascript" src="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.6.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.6.0/dist/mindmap.min.css">
       
 
       
