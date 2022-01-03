@@ -4,6 +4,19 @@
   
   
   <entry>
+    <title>MFC学习和深入浅出易语言核心</title>
+    <link href="/2022/01/03/1-3/"/>
+    <url>/2022/01/03/1-3/</url>
+    
+    <content type="html"><![CDATA[<p>消息窗口通过调用use32.dll来传递信息</p><p>MFC编程方便逆向小经验（易语言通用）：</p><p>1.unicode改成ascll</p><p>2.增量链接选否</p><p>3.设置调试符号</p><p>模态对话框和非模态对话框</p><p>UI线程阻塞了消息派发函数</p><p>_AfxDispatchCmdMsg</p><p>所以mfc按钮事件都要经过这个函数，其中pfn这个参数最为重要</p><p>这时分析下一般的mfc函数参数压入栈，看看地址的数值，就是mfc消息传递函数的特征码</p><p>绝对地址一定不包含特征码，有换成？？通配符</p><p>有call和常量也不行，如果一定需要，和上步一样做法</p><p>release和debug特征码会有所不同</p><p>extra_args=/DENIG:FULL</p><p>pdb保存调试信息，如果在编辑器选择了生成调试信息，，它会将给多的调试信息保存在pdb里面，少部分是保存在pe里面</p><p>易语言调试更改增量链接之类的，在易语言文件link.ini里面看vs怎么样的英文命令，加到这个文件里面</p><p>作业步骤</p><p>找出其他按钮事件的特征码，不断往会跟找到真正函数，最后注意必大跳的汇编指令</p><p>易语言实现mfc会层层封装，所以一开始搜到的函数会不是真正的信息函数</p><p>od加载pe文件的时候会在udd文件夹有历史记录，所以有时候当更新之前加载的pe文件的时候会加载错误，解决方式1.删除udd之前保存的历史记录文件 2.从模块删除分析</p><p>[]里面ebp-数值表示的是内容-4</p><p>字符串比较和整数比较特征码不一样</p><p>任务：研究下EWND</p><p> 玩下E-debug&amp;analys  E-reverse</p><p>学到的东西：</p><p>1.学会mfc和易语言对于窗口信息传递是怎么样一个过程，如何去找他们的特征码</p><p>2.初步了解pdb是什么，用来做什么</p><p>3.一些易语言和MFC编程小技巧，还有od bug问题解决</p><p>4.时钟事件对于程序运行和逆向起到的作用，逆向如何去解决的方案</p><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kity@2.0.4/dist/kity.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text/javascript" src="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.6.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/hexo-simple-mindmap@0.6.0/dist/mindmap.min.css">]]></content>
+    
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title></title>
     <link href="/2021/12/06/12-4/"/>
     <url>/2021/12/06/12-4/</url>
